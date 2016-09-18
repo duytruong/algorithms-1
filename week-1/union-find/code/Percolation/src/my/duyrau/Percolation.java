@@ -14,25 +14,14 @@ public class Percolation {
 
     private int mSideLength;
 
-    private void validate(int p) {
-        if (p <= 0 || p > mSideLength) {
-            throw new IndexOutOfBoundsException("row (column) index out of bounds");
-        }
-    }
-
-    private int convert2DTo1D(int row, int column) {
-        return row * mSideLength + column;
-    }
-
-    private boolean isValidCoordinate(int row, int column) {
-        return (row > 0 && row <= mSideLength && column > 0 && column <= mSideLength);
-    }
-
     public Percolation(int n) {
-        validate(n);
+        if (n <= 0) {
+            throw new IllegalArgumentException("The input must be greater than 0");
+        }
         mSize = n * n;
         mSideLength = n;
         // 2 slots for virtual top site and virtual bottom site
+        // the mSize-th site is the top, (mSize - 1)-th site is the bottom.
         mWeightedQU = new WeightedQuickUnionUF(mSize + 2);
         mStates = new boolean[mSize];
         int startIndexOfBottomRow = mSideLength * (mSideLength - 1);
@@ -51,39 +40,53 @@ public class Percolation {
         }
     }
 
+    private void validate(int p) {
+        if (p <= 0 || p > mSideLength) {
+            throw new IndexOutOfBoundsException("row (column) index out of bounds");
+        }
+    }
+
+    // 1-based
+    private int convert2DTo1D(int row, int column) {
+        return (row - 1) * mSideLength + (column - 1);
+    }
+
+    // 1-based
+    private boolean isValidCoordinate(int row, int column) {
+        return (row > 0 && row <= mSideLength
+                && column > 0 && column <= mSideLength);
+    }
+
     public void open(int i, int j) {
         validate(i);
-        int r = i - 1;
         validate(j);
-        int c = j - 1;
-        
-        int currentIdx = convert2DTo1D(r, c);
+
+        int currentIdx = convert2DTo1D(i, j);
         mStates[currentIdx] = true;
 
         // top
-        if (isValidCoordinate(r - 1, c) && isOpen(r - 1, c)) {
-            int adjacentIdx = convert2DTo1D(r - 1, c);
+        if (isValidCoordinate(i - 1, j) && isOpen(i - 1, j)) {
+            int adjacentIdx = convert2DTo1D(i - 1, j);
             mWeightedQU.union(adjacentIdx, currentIdx);
         }
         // right
-        if (isValidCoordinate(r, c + 1) && isOpen(r, c + 1)) {
-            int adjacentIdx = convert2DTo1D(r, c + 1);
+        if (isValidCoordinate(i, j + 1) && isOpen(i, j + 1)) {
+            int adjacentIdx = convert2DTo1D(i, j + 1);
             mWeightedQU.union(adjacentIdx, currentIdx);
         }
         // bottom
-        if (isValidCoordinate(r + 1, c) && isOpen(r + 1, c)) {
-            int adjacentIdx = convert2DTo1D(r + 1, c);
+        if (isValidCoordinate(i + 1, j) && isOpen(i + 1, j)) {
+            int adjacentIdx = convert2DTo1D(i + 1, j);
             mWeightedQU.union(adjacentIdx, currentIdx);
         }
         // left
-        if (isValidCoordinate(r, c - 1) && isOpen(r, c - 1)) {
-            int adjacentIdx = convert2DTo1D(r, c - 1);
+        if (isValidCoordinate(i, j - 1) && isOpen(i, j - 1)) {
+            int adjacentIdx = convert2DTo1D(i, j - 1);
             mWeightedQU.union(adjacentIdx, currentIdx);
         }
 
     }
 
-    // a full site is an open site
     public boolean isOpen(int i, int j) {
         validate(i);
         validate(j);
@@ -93,18 +96,13 @@ public class Percolation {
 
     public boolean isFull(int i, int j) {
         validate(i);
-        int r = i - 1;
         validate(j);
-        int c = j - 1;
-        int currentIdx = convert2DTo1D(r, c);
+        int currentIdx = convert2DTo1D(i, j);
         return mWeightedQU.connected(currentIdx, mSize);
     }
 
     public boolean percolates() {
         return mWeightedQU.connected(mSize, mSize + 1);
 
-    }
-
-    public static void main(String[] args) {
     }
 }
