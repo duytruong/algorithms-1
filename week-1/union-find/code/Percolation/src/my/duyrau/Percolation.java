@@ -1,5 +1,3 @@
-package my.duyrau;
-
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
@@ -98,11 +96,15 @@ public class Percolation {
         validate(i);
         validate(j);
         int currentIdx = convert2DTo1D(i, j);
-        return mWeightedQU.connected(currentIdx, mSize);
+        return mStates[currentIdx] && mWeightedQU.connected(currentIdx, mSize);
     }
 
     public boolean percolates() {
-        return mWeightedQU.connected(mSize, mSize + 1);
+        boolean state = true;
+        if (mSideLength == 1) {
+            state = mStates[0];
+        }
+        return state && mWeightedQU.connected(mSize, mSize + 1);
 
     }
 }

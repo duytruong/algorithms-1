@@ -1,5 +1,3 @@
-package my.duyrau;
-
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
@@ -16,7 +14,6 @@ public class PercolationStats {
         if (n <= 0 || trials <= 0) {
             throw new IllegalArgumentException("The input must be greater than 0");
         }
-        mPercolation = new Percolation(n);
         thresholds = new double[trials];
         mTrials = trials;
         calcualculateThresholdRepeatedly(n, trials);
@@ -37,9 +34,10 @@ public class PercolationStats {
 
     private void calcualculateThresholdRepeatedly(int n, int trials) {
         for (int i = 0; i < trials; i++) {
+            mPercolation = new Percolation(n);
             thresholds[i] = calculateThreshold(n);
             mPercolation = null;
-            mPercolation = new Percolation(n);
+
         }
     }
 
