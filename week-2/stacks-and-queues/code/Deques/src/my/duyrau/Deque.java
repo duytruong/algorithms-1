@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by duyrau on 2/17/17.
+ * Created by duytruong on 2/17/17.
  */
 public class Deque<Item> implements Iterable<Item> {
 
