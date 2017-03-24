@@ -13,9 +13,9 @@ public class Deque<Item> implements Iterable<Item> {
     private int size; // the number of items on the deque
 
     private class Node {
-        Item data;
-        Node next;
-        Node prev;
+        private Item data;
+        private Node next;
+        private Node prev;
 
         /**
          * Create a new {@code Node}.
@@ -56,11 +56,11 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
+    public Deque() { }
+
     private boolean isInputNull(Item item) {
         return item == null;
     }
-
-    public Deque() {}
 
     public boolean isEmpty() {
         return head == null && tail == null;
@@ -136,30 +136,5 @@ public class Deque<Item> implements Iterable<Item> {
     @Override
     public Iterator<Item> iterator() {
         return new DoubleLinkedListIterator();
-    }
-
-    public static void main(String[] args) {
-        Deque<Integer> deque = new Deque<>();
-        System.out.println("The deque is empty: " + deque.isEmpty());
-        System.out.println("Size: " + deque.size());
-
-        deque.addFirst(6);
-        deque.addFirst(3);
-        Integer i0 = deque.removeFirst();
-        System.out.println("Removed = " + i0);
-        deque.addLast(5);
-        deque.addLast(2);
-        deque.addFirst(7);
-        System.out.println("Now, head = " + deque.head.data);
-        System.out.println("Now, tail = " + deque.tail.data);
-        Integer i1 = deque.removeLast();
-        System.out.println("Removed = " + i1);
-        System.out.println("Now, tail = " + deque.tail.data);
-
-        for (Integer item : deque) {
-            System.out.print(item + " ");
-        }
-        System.out.print("\nSize: " + deque.size());
-        System.out.println("\nThe deque is empty: " + deque.isEmpty());
     }
 }
