@@ -7,6 +7,8 @@
  *  For use on Coursera, Algorithms Part I programming assignment.
  *
  ******************************************************************************/
+package my.duyrau;
+
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.Comparator;
