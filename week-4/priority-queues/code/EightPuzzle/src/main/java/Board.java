@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by duyrau on 6/4/17.
  */
@@ -12,13 +15,19 @@ public class Board {
 //        if (blocks.length != blocks[0].length) {
 //            throw new IllegalArgumentException("Parameter must be n-by-n array");
 //        }
-        this.blocks = blocks;
+        int dimen = blocks.length;
+        this.blocks = new int[dimen][dimen];
+        for (int i = 0; i < dimen; i++) {
+            for (int j = 0; j < dimen; j++) {
+                this.blocks[i][j] = blocks[i][j];
+            }
+        }
     }
 
-    private void swap(int[][] arr, int i, int j, int x, int y) {
-        int temp = arr[i][j];
-        arr[i][j] = arr[x][y];
-        arr[x][y] = temp;
+    private void swap(int i, int j, int x, int y) {
+        int temp = this.blocks[i][j];
+        this.blocks[i][j] = this.blocks[x][y];
+        this.blocks[x][y] = temp;
     }
 
     public int dimension() {
@@ -74,23 +83,24 @@ public class Board {
     }
 
     public Board twin() {
-        int dimen = dimension();
-        int[][] newBlocks = new int[dimen][dimen];
-        for (int i = 0; i < dimen; i++) {
-            for (int j = 0; j < dimen; j++) {
-                newBlocks[i][j] = this.blocks[i][j];
-            }
-        }
+//        int dimen = dimension();
+//        int[][] newBlocks = new int[dimen][dimen];
+//        for (int i = 0; i < dimen; i++) {
+//            for (int j = 0; j < dimen; j++) {
+//                newBlocks[i][j] = this.blocks[i][j];
+//            }
+//        }
+        Board newBoard = new Board(this.blocks);
 
         // swap 2 blocks on a row
-        if (newBlocks[0][0] != 0 && newBlocks[0][1] != 0) {
+        if (this.blocks[0][0] != 0 && this.blocks[0][1] != 0) {
             // if blank block is not on the first two blocks of row 0, swap them.
-            swap(newBlocks, 0, 0, 0, 1);
+            newBoard.swap(0, 0, 0, 1);
         } else {
             // otherwise, swap first two blocks of row 1.
-            swap(newBlocks, 1, 0, 1, 1);
+            newBoard.swap(1, 0, 1, 1);
         }
-        return new Board(newBlocks);
+        return newBoard;
     }
 
     public boolean equals(Object y) {
@@ -109,14 +119,59 @@ public class Board {
     }
 
     public Iterable<Board> neighbors() {
-        return null;
+        int dimen = dimension();
+        List<Board> neighbors = new ArrayList<Board>();
+        int blankR = 0, blankC = 0;
+        for (int i = 0; i < dimen; i++) {
+            for (int j = 0; j < dimen; j++) {
+                if (this.blocks[i][j] == 0){
+                    blankR = i;
+                    blankC = j;
+                }
+            }
+        }
+
+        // up neighbor exists
+        if (blankR >= 1) {
+            Board neighbor = new Board(this.blocks);
+            neighbor.swap(blankR, blankC, blankR - 1, blankC);
+            neighbors.add(neighbor);
+        }
+        // down neighbor exists
+        if (blankR <= dimen - 2) {
+            Board neighbor = new Board(this.blocks);
+            neighbor.swap(blankR, blankC, blankR + 1, blankC);
+            neighbors.add(neighbor);
+        }
+        // left neighbor exists
+        if (blankC >= 1) {
+            Board neighbor = new Board(this.blocks);
+            neighbor.swap(blankR, blankC, blankR, blankC - 1);
+            neighbors.add(neighbor);
+        }
+        // right neighbor exists
+        if (blankC <= dimen - 2) {
+            Board neighbor = new Board(this.blocks);
+            neighbor.swap(blankR, blankC, blankR, blankC + 1);
+            neighbors.add(neighbor);
+        }
+        return neighbors;
     }
 
     public String toString() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        int dimen = dimension();
+        sb.append(dimen).append("\n");
+        for (int i = 0; i < dimen; i++) {
+            for (int j = 0; j < dimen; j++) {
+                sb.append(" ").append(this.blocks[i][j]).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
-    // used for testing
+    // used for testing, remove when submit
     public int[][] getBlocks() {
         return this.blocks;
     }

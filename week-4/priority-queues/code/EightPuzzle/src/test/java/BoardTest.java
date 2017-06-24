@@ -2,6 +2,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -113,5 +116,62 @@ public class BoardTest {
         int[][] blocks = {{1, 2}, {3, 0}};
         Board board1 = new Board(blocks);
         assertEquals(false, board1.equals(null));
+    }
+
+    @Test
+    public void testNeighbor1() {
+        int[][] blocks = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
+        Board board = new Board(blocks);
+        boolean pass = true;
+
+        int[][] up = {{8, 0, 3}, {4, 1, 2}, {7, 6, 5}};
+        int[][] down = {{8, 1, 3}, {4, 6, 2}, {7, 0, 5}};
+        int[][] left = {{8, 1, 3}, {0, 4, 2}, {7, 6, 5}};
+        int[][] right = {{8, 1, 3}, {4, 2, 0}, {7, 6, 5}};
+        List<Board> expected = new ArrayList<>();
+        expected.add(new Board(up));
+        expected.add(new Board(down));
+        expected.add(new Board(left));
+        expected.add(new Board(right));
+
+
+        Iterable<Board> neighbors = board.neighbors();
+        int i = 0;
+        for (Board neighbor : neighbors) {
+            if (!neighbor.equals(expected.get(i++)))
+                pass = false;
+        }
+        assertEquals(true, pass);
+    }
+
+    @Test
+    public void testNeighbor2() {
+        int[][] blocks = {{0, 1, 3}, {4, 8, 2}, {7, 6, 5}};
+        Board board = new Board(blocks);
+        boolean pass = true;
+
+        int[][] right = {{1, 0, 3}, {4, 8, 2}, {7, 6, 5}};
+        int[][] down = {{4, 1, 3}, {0, 8, 2}, {7, 6, 5}};
+        List<Board> expected = new ArrayList<>();
+        expected.add(new Board(down));
+        expected.add(new Board(right));
+
+
+        Iterable<Board> neighbors = board.neighbors();
+        int i = 0;
+        for (Board neighbor : neighbors) {
+            if (!neighbor.equals(expected.get(i++)))
+                pass = false;
+        }
+        assertEquals(true, pass);
+    }
+
+    @Test
+    public void testToString() {
+        int[][] blocks = {{8, 1, 3}, {4, 0, 2}, {7, 6, 5}};
+        Board board = new Board(blocks);
+        String actual = board.toString();
+        String expected = "3\n 8  1  3 \n 4  0  2 \n 7  6  5 \n";
+        assertEquals(expected, actual);
     }
 }
